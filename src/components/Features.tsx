@@ -1,50 +1,84 @@
 
 import React from 'react';
+import { 
+  Users, 
+  ShoppingCart, 
+  Package, 
+  BarChart3, 
+  UserCircle,
+  Globe,
+  Shield,
+  Zap
+} from 'lucide-react';
 
 const features = [
   {
-    title: 'Feature One',
-    description: 'Description of your first amazing feature goes here. Explain the benefits clearly.',
+    name: 'Customer Relationship Management',
+    description: 'Track leads, manage customer interactions, and nurture relationships to drive sales growth.',
+    icon: Users,
   },
   {
-    title: 'Feature Two',
-    description: 'Description of your second amazing feature goes here. Keep it concise and compelling.',
+    name: 'Sales Management',
+    description: 'Process orders, generate invoices, and track payments in a streamlined workflow.',
+    icon: ShoppingCart,
   },
   {
-    title: 'Feature Three',
-    description: 'Description of your third amazing feature goes here. Focus on the value it provides.',
+    name: 'Inventory Control',
+    description: 'Monitor stock levels, manage products, and automate reordering processes.',
+    icon: Package,
   },
   {
-    title: 'Feature Four',
-    description: 'Description of your fourth amazing feature goes here. Tell users why it matters.',
+    name: 'Human Resources',
+    description: 'Manage employee records, track time off, and streamline HR processes.',
+    icon: UserCircle,
+  },
+  {
+    name: 'Analytics & Reporting',
+    description: 'Make data-driven decisions with customizable dashboards and comprehensive reports.',
+    icon: BarChart3,
+  },
+  {
+    name: 'Multi-Company Support',
+    description: 'Manage multiple businesses from a single platform with secure data separation.',
+    icon: Globe,
+  },
+  {
+    name: 'Enterprise-Grade Security',
+    description: 'Keep your business data safe with advanced security features and role-based access control.',
+    icon: Shield,
+  },
+  {
+    name: 'Performance & Scalability',
+    description: 'Built for speed and reliability, our platform grows with your business needs.',
+    icon: Zap,
   },
 ];
 
 const Features = () => {
   return (
-    <section id="features" className="py-16 ">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Features</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Highlight the key features of your product or service here. Focus on the benefits that matter most to your audience.
+    <div className="py-24 bg-gray-50 dark:bg-gray-900">
+      <div className="container px-4 md:px-6 mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            Comprehensive Business Management
+          </h2>
+          <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto">
+            Our platform combines powerful CRM and ERP features to streamline your business operations
           </p>
         </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            // Outer container creates the gradient border and shadow
-            <div key={index} className="p-[2px] bg-gradient-to-t from-purple-900 to-blue-900 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-              {/* Inner container holds the content with a solid background */}
-              <div className="bg-black p-6 rounded-md h-full">
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-gray-500">{feature.description}</p>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => (
+            <div key={feature.name} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white mb-4">
+                <feature.icon className="h-6 w-6" />
               </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">{feature.name}</h3>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -1,27 +1,36 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
-    <section className="py-20 md:py-28">
-      <div className="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold leading-normal py-3 mb-6 bg-gradient-to-br from-blue-500 to-fuchsia-500 bg-clip-text text-transparent">
-          Build something amazing
-        </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-          This clean, blank canvas is ready for you to add your vision. Start creating your next great project today.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Button size="lg" className="px-8 rounded-md bg-gradient-to-br from-blue-700 to-blue-900 text-white hover:from-blue-600 hover:to-fuchsia-600 transition-colors">
-            Get Started
-          </Button>
-          <Button size="lg" variant="outline" className="px-8 rounded-md">
-            Learn More
-          </Button>
+    <div className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-white dark:bg-gray-950">
+      <div className="container px-4 md:px-6 mx-auto">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+              All-in-One Business Management Platform
+            </h1>
+            <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+              Combine CRM and ERP functionalities in a single, powerful platform. Manage customers, inventory, sales, and employees with ease.
+            </p>
+          </div>
+          <div className="space-x-4">
+            <Link to="/register">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                Get Started
+              </Button>
+            </Link>
+            <Link to="/login">
+              <Button size="lg" variant="outline">
+                Sign In
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
