@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -13,12 +13,12 @@ const Hero = () => {
               All-in-One Business Management Platform
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-              Combine CRM and ERP functionalities in a single, powerful platform. Manage customers, inventory, sales, and employees with ease.
+              Combine CRM and ERP functionalities in a single, powerful platform. Streamline your business operations and boost productivity.
             </p>
           </div>
           <div className="space-x-4">
             <Link to="/register">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>
             </Link>
@@ -29,9 +29,3 @@ const Hero = () => {
             </Link>
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default Hero;

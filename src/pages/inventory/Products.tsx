@@ -1,309 +1,467 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, Plus, Search } from 'lucide-react';
-import { Product } from '@/types';
+import { DashboardLayout } from '../../components/layout/DashboardLayout';
+import { useTranslation } from '../../i18n';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '../../components/ui/table';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from '../../components/ui/dialog';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '../../components/ui/dropdown-menu';
+import { Label } from '../../components/ui/label';
+import { Badge } from '../../components/ui/badge';
+import { 
+  Plus, 
+  Search, 
+  MoreHorizontal, 
+  Edit, 
+  Trash, 
+  Download, 
+  Filter,
+  BarChart3,
+  Copy
+} from 'lucide-react';
+import { Product } from '../../types';
 
 const Products: React.FC = () => {
+  const { t } = useTranslation();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Mock data - in a real app, this would come from Supabase
-  const products: Product[] = [
+  // Données fictives pour les produits
+  const [products, setProducts] = useState<Product[]>([
     {
       id: '1',
-      name: 'Premium Laptop',
-      sku: 'TECH-001',
-      description: 'High-performance laptop with 16GB RAM and 512GB SSD',
-      price: 1499.99,
-      cost: 1100.00,
-      stockQuantity: 24,
-      category: 'Electronics',
-      tags: ['laptop', 'premium', 'tech'],
+      name: 'Ordinateur Portable Pro',
+      sku: 'LP-001',
+      description: 'Ordinateur portable haut de gamme pour professionnels',
+      price: 1299.99,
+      cost: 899.99,
+      quantity: 25,
+      category: 'Électronique',
+      supplier: 'TechSupply',
+      status: 'active',
+      images: ['laptop.jpg'],
       companyId: '1',
       createdAt: new Date('2025-01-10'),
       updatedAt: new Date('2025-06-15'),
     },
     {
       id: '2',
-      name: 'Wireless Headphones',
-      sku: 'TECH-002',
-      description: 'Noise-cancelling wireless headphones with 30-hour battery life',
-      price: 149.99,
-      cost: 85.00,
-      stockQuantity: 56,
-      category: 'Electronics',
-      tags: ['audio', 'wireless'],
+      name: 'Écran 27" 4K',
+      sku: 'MON-4K-27',
+      description: 'Écran 4K de 27 pouces avec technologie IPS',
+      price: 349.99,
+      cost: 249.99,
+      quantity: 42,
+      category: 'Électronique',
+      supplier: 'DisplayTech',
+      status: 'active',
+      images: ['monitor.jpg'],
       companyId: '1',
-      createdAt: new Date('2025-02-15'),
-      updatedAt: new Date('2025-06-20'),
-    },
-    {
-      id: '3',
-      name: 'Office Chair',
-      sku: 'FURN-001',
-      description: 'Ergonomic office chair with lumbar support',
-      price: 199.99,
-      cost: 120.00,
-      stockQuantity: 18,
-      category: 'Furniture',
-      tags: ['office', 'ergonomic'],
-      companyId: '1',
-      createdAt: new Date('2025-03-05'),
-      updatedAt: new Date('2025-06-25'),
-    },
-    {
-      id: '4',
-      name: 'Smartphone X',
-      sku: 'TECH-003',
-      description: 'Latest smartphone with advanced camera system',
-      price: 899.99,
-      cost: 650.00,
-      stockQuantity: 32,
-      category: 'Electronics',
-      tags: ['smartphone', 'premium'],
-      companyId: '1',
-      createdAt: new Date('2025-04-20'),
+      createdAt: new Date('2025-02-05'),
       updatedAt: new Date('2025-07-01'),
     },
     {
-      id: '5',
-      name: 'Smart Watch',
-      sku: 'TECH-004',
-      description: 'Fitness tracking smartwatch with heart rate monitor',
-      price: 249.99,
-      cost: 150.00,
-      stockQuantity: 45,
-      category: 'Electronics',
-      tags: ['wearable', 'fitness'],
+      id: '3',
+      name: 'Clavier Mécanique RGB',
+      sku: 'KB-MECH-01',
+      description: 'Clavier mécanique avec rétroéclairage RGB personnalisable',
+      price: 129.99,
+      cost: 79.99,
+      quantity: 0,
+      category: 'Accessoires',
+      supplier: 'PeriphTech',
+      status: 'inactive',
+      images: ['keyboard.jpg'],
       companyId: '1',
-      createdAt: new Date('2025-05-12'),
-      updatedAt: new Date('2025-07-02'),
+      createdAt: new Date('2025-03-15'),
+      updatedAt: new Date('2025-05-20'),
     },
-  ];
+  ]);
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleAddProduct = (newProduct: Partial<Product>) => {
+    const product: Product = {
+      id: Math.random().toString(36).substring(7),
+      name: newProduct.name || '',
+      sku: newProduct.sku || `SKU-${Math.floor(Math.random() * 10000)}`,
+      description: newProduct.description || '',
+      price: newProduct.price || 0,
+      cost: newProduct.cost || 0,
+      quantity: newProduct.quantity || 0,
+      category: newProduct.category || '',
+      supplier: newProduct.supplier || '',
+      status: newProduct.status || 'active',
+      images: newProduct.images || [],
+      companyId: '1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(value);
+    setProducts([...products, product]);
+    setIsAddDialogOpen(false);
   };
 
-  const getStockStatusBadge = (quantity: number) => {
+  const handleEditProduct = (updatedProduct: Partial<Product>) => {
+    if (!selectedProduct) return;
+
+    const updatedProducts = products.map((product) => {
+      if (product.id === selectedProduct.id) {
+        return {
+          ...product,
+          ...updatedProduct,
+          updatedAt: new Date(),
+        };
+      }
+      return product;
+    });
+
+    setProducts(updatedProducts);
+    setIsEditDialogOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleDeleteProduct = () => {
+    if (!selectedProduct) return;
+
+    const updatedProducts = products.filter(
+      (product) => product.id !== selectedProduct.id
+    );
+
+    setProducts(updatedProducts);
+    setIsDeleteDialogOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const getStockStatus = (quantity: number) => {
     if (quantity <= 0) {
-      return <Badge variant="destructive">Out of Stock</Badge>;
+      return { label: t('erp.outOfStock'), variant: 'destructive' as const };
     } else if (quantity < 10) {
-      return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Low Stock</Badge>;
+      return { label: t('erp.lowStock'), variant: 'warning' as const };
     } else {
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">In Stock</Badge>;
+      return { label: t('erp.inStock'), variant: 'success' as const };
     }
   };
 
+  const filteredProducts = products.filter((product) => {
+    const searchTerm = searchQuery.toLowerCase();
+    return (
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.sku.toLowerCase().includes(searchTerm) ||
+      product.category.toLowerCase().includes(searchTerm) ||
+      product.supplier?.toLowerCase().includes(searchTerm)
+    );
+  });
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">{t('erp.products')}</h1>
+          <Button onClick={() => setIsAddDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t('erp.addProduct')}
+          </Button>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('common.search')}
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Filter className="mr-2 h-4 w-4" />
+              {t('common.filter')}
             </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Add New Product</DialogTitle>
-              <DialogDescription>
-                Create a new product in your inventory. Fill out the information below.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Product Name
-                  </label>
-                  <Input id="name" placeholder="Premium Laptop" />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="sku" className="text-sm font-medium">
-                    SKU
-                  </label>
-                  <Input id="sku" placeholder="TECH-001" />
-                </div>
+            <Button variant="outline" size="sm">
+              <Download className="mr-2 h-4 w-4" />
+              {t('common.export')}
+            </Button>
+          </div>
+        </div>
+
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('common.name')}</TableHead>
+                <TableHead>{t('erp.sku')}</TableHead>
+                <TableHead className="hidden md:table-cell">{t('erp.price')}</TableHead>
+                <TableHead className="hidden md:table-cell">{t('erp.quantity')}</TableHead>
+                <TableHead className="hidden md:table-cell">{t('common.status')}</TableHead>
+                <TableHead className="text-right">{t('common.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredProducts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    {t('common.noData')}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredProducts.map((product) => {
+                  const stockStatus = getStockStatus(product.quantity);
+                  return (
+                    <TableRow key={product.id}>
+                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell>{product.sku}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {product.price.toLocaleString()} €
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{product.quantity}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Badge variant={stockStatus.variant as any}>
+                          {stockStatus.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">{t('common.actions')}</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>{t('common.actions')}</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedProduct(product);
+                                setIsEditDialogOpen(true);
+                              }}
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              {t('common.edit')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedProduct(product);
+                                setIsDeleteDialogOpen(true);
+                              }}
+                            >
+                              <Trash className="mr-2 h-4 w-4" />
+                              {t('common.delete')}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                              <Copy className="mr-2 h-4 w-4" />
+                              {t('common.duplicate')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <BarChart3 className="mr-2 h-4 w-4" />
+                              {t('common.viewStats')}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {/* Dialogue d'ajout de produit */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{t('erp.addProduct')}</DialogTitle>
+            <DialogDescription>
+              {t('erp.addProductDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">{t('common.name')}</Label>
+                <Input id="name" />
               </div>
               <div className="space-y-2">
-                <label htmlFor="description" className="text-sm font-medium">
-                  Description
-                </label>
-                <Input id="description" placeholder="High-performance laptop with 16GB RAM and 512GB SSD" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="price" className="text-sm font-medium">
-                    Price
-                  </label>
-                  <Input id="price" type="number" placeholder="1499.99" />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="cost" className="text-sm font-medium">
-                    Cost
-                  </label>
-                  <Input id="cost" type="number" placeholder="1100.00" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="stockQuantity" className="text-sm font-medium">
-                    Stock Quantity
-                  </label>
-                  <Input id="stockQuantity" type="number" placeholder="24" />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="category" className="text-sm font-medium">
-                    Category
-                  </label>
-                  <Select>
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="electronics">Electronics</SelectItem>
-                      <SelectItem value="furniture">Furniture</SelectItem>
-                      <SelectItem value="clothing">Clothing</SelectItem>
-                      <SelectItem value="office">Office Supplies</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Label htmlFor="sku">{t('erp.sku')}</Label>
+                <Input id="sku" />
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={() => setIsAddDialogOpen(false)}>Save Product</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="price">{t('erp.price')} (€)</Label>
+                <Input id="price" type="number" min="0" step="0.01" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cost">{t('erp.cost')} (€)</Label>
+                <Input id="cost" type="number" min="0" step="0.01" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="quantity">{t('erp.quantity')}</Label>
+                <Input id="quantity" type="number" min="0" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">{t('erp.category')}</Label>
+                <Input id="category" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">{t('common.description')}</Label>
+              <Input id="description" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={() => handleAddProduct({ name: 'Nouveau Produit', price: 99.99, quantity: 10 })}>
+              {t('common.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-          <Input
-            type="search"
-            placeholder="Search products..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <Select defaultValue="all">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="electronics">Electronics</SelectItem>
-            <SelectItem value="furniture">Furniture</SelectItem>
-            <SelectItem value="clothing">Clothing</SelectItem>
-            <SelectItem value="office">Office Supplies</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {/* Dialogue de modification de produit */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{t('erp.editProduct')}</DialogTitle>
+            <DialogDescription>
+              {t('erp.editProductDescription')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">{t('common.name')}</Label>
+                <Input
+                  id="edit-name"
+                  defaultValue={selectedProduct?.name}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-sku">{t('erp.sku')}</Label>
+                <Input
+                  id="edit-sku"
+                  defaultValue={selectedProduct?.sku}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-price">{t('erp.price')} (€)</Label>
+                <Input
+                  id="edit-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={selectedProduct?.price}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-cost">{t('erp.cost')} (€)</Label>
+                <Input
+                  id="edit-cost"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={selectedProduct?.cost}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-quantity">{t('erp.quantity')}</Label>
+                <Input
+                  id="edit-quantity"
+                  type="number"
+                  min="0"
+                  defaultValue={selectedProduct?.quantity}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-category">{t('erp.category')}</Label>
+                <Input
+                  id="edit-category"
+                  defaultValue={selectedProduct?.category}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-description">{t('common.description')}</Label>
+              <Input
+                id="edit-description"
+                defaultValue={selectedProduct?.description}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={() => handleEditProduct({ name: 'Produit Modifié', price: 129.99 })}>
+              {t('common.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>SKU</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>{product.sku}</TableCell>
-                <TableCell>{formatCurrency(product.price)}</TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <span>{product.stockQuantity}</span>
-                    {getStockStatusBadge(product.stockQuantity)}
-                  </div>
-                </TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>View details</DropdownMenuItem>
-                      <DropdownMenuItem>Edit product</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Adjust stock</DropdownMenuItem>
-                      <DropdownMenuItem>Add to order</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-red-600">Delete product</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+      {/* Dialogue de suppression de produit */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t('erp.deleteProduct')}</DialogTitle>
+            <DialogDescription>
+              {t('erp.deleteProductConfirmation')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p>
+              {t('erp.deleteProductWarning', {
+                name: selectedProduct?.name,
+              })}
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteProduct}>
+              {t('common.delete')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </DashboardLayout>
   );
 };
 
