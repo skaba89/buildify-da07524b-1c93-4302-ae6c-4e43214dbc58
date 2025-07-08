@@ -1,6 +1,6 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Company, UserRole } from '../types';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, Company } from '@/types';
 
 interface AuthContextType {
   user: User | null;
@@ -8,33 +8,20 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
-  setupCompany: (companyData: Partial<Company>) => Promise<void>;
-  updateUser: (userData: Partial<User>) => Promise<void>;
-  updateCompany: (companyData: Partial<Company>) => Promise<void>;
+  setupCompany: (company: Omit<Company, 'id'>) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  company: null,
-  isAuthenticated: false,
-  isLoading: true,
-  login: async () => {},
-  register: async () => {},
-  logout: () => {},
-  setupCompany: async () => {},
-  updateUser: async () => {},
-  updateCompany: async () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simuler le chargement des données utilisateur depuis le stockage local
+    // Vérifier si l'utilisateur est déjà connecté
     const storedUser = localStorage.getItem('user');
     const storedCompany = localStorage.getItem('company');
     
@@ -52,29 +39,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      // Simuler une requête d'API
+      
+      // Simulation d'une requête API
+      // Dans une vraie application, vous feriez une requête à votre API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simuler un utilisateur pour la démo
+      // Utilisateur fictif pour la démonstration
       const mockUser: User = {
         id: '1',
         email,
-        firstName: 'Jean',
-        lastName: 'Dupont',
-        role: UserRole.ADMIN,
-        companyId: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        name: 'Utilisateur Test',
+        role: 'admin',
+        createdAt: new Date().toISOString(),
       };
       
       const mockCompany: Company = {
         id: '1',
-        name: 'Ma Société SAS',
+        name: 'Entreprise Test',
         industry: 'Technologie',
-        size: '10-50',
+        employees: '10-50',
+        address: '123 Rue de Test',
+        city: 'Paris',
+        zipCode: '75000',
         country: 'France',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        phone: '+33123456789',
+        website: 'https://example.com',
+        createdAt: new Date().toISOString(),
       };
       
       setUser(mockUser);
@@ -90,22 +80,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+  const register = async (email: string, password: string, name: string) => {
     try {
       setIsLoading(true);
-      // Simuler une requête d'API
+      
+      // Simulation d'une requête API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Créer un utilisateur sans entreprise
+      // Utilisateur fictif pour la démonstration
       const mockUser: User = {
         id: '1',
         email,
-        firstName,
-        lastName,
-        role: UserRole.ADMIN,
-        companyId: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        name,
+        role: 'admin',
+        createdAt: new Date().toISOString(),
       };
       
       setUser(mockUser);
@@ -118,76 +106,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const setupCompany = async (companyData: Partial<Company>) => {
+  const setupCompany = async (companyData: Omit<Company, 'id'>) => {
     try {
       setIsLoading(true);
-      // Simuler une requête d'API
+      
+      // Simulation d'une requête API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Entreprise fictive pour la démonstration
       const mockCompany: Company = {
         id: '1',
-        name: companyData.name || 'Ma Société',
-        industry: companyData.industry || 'Technologie',
-        size: companyData.size || '1-10',
-        address: companyData.address,
-        city: companyData.city,
-        zipCode: companyData.zipCode,
-        country: companyData.country || 'France',
-        phone: companyData.phone,
-        website: companyData.website,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        ...companyData,
+        createdAt: new Date().toISOString(),
       };
-      
-      // Mettre à jour l'utilisateur avec l'ID de l'entreprise
-      if (user) {
-        const updatedUser = { ...user, companyId: mockCompany.id };
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-      }
       
       setCompany(mockCompany);
       localStorage.setItem('company', JSON.stringify(mockCompany));
     } catch (error) {
       console.error('Erreur de configuration de l\'entreprise:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateUser = async (userData: Partial<User>) => {
-    try {
-      setIsLoading(true);
-      // Simuler une requête d'API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (user) {
-        const updatedUser = { ...user, ...userData, updatedAt: new Date() };
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-      }
-    } catch (error) {
-      console.error('Erreur de mise à jour de l\'utilisateur:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateCompany = async (companyData: Partial<Company>) => {
-    try {
-      setIsLoading(true);
-      // Simuler une requête d'API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (company) {
-        const updatedCompany = { ...company, ...companyData, updatedAt: new Date() };
-        setCompany(updatedCompany);
-        localStorage.setItem('company', JSON.stringify(updatedCompany));
-      }
-    } catch (error) {
-      console.error('Erreur de mise à jour de l\'entreprise:', error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -212,8 +148,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         register,
         logout,
         setupCompany,
-        updateUser,
-        updateCompany,
       }}
     >
       {children}
@@ -221,4 +155,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

@@ -5,10 +5,13 @@ import Features from '../components/Features';
 import CTA from '../components/CTA';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import { useTranslation } from '@/i18n';
 
 const Index = () => {
+  const { t } = useTranslation();
+  
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <Navbar />
       <Hero />
       <Features />

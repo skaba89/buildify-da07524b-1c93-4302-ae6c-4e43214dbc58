@@ -4,7 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "@/hooks/use-theme";
+import { I18nProvider } from "./i18n";
+import { AuthProvider } from "./contexts/AuthContext";
 
 // Pages
 import Index from "./pages/Index";
@@ -22,35 +23,43 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/company-setup" element={<CompanySetup />} />
-            
-            {/* Protected routes - would normally have auth check */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            
-            {/* CRM routes */}
-            <Route path="/crm/contacts" element={<Contacts />} />
-            
-            {/* ERP routes */}
-            <Route path="/inventory/products" element={<Products />} />
-            <Route path="/sales/orders" element={<Orders />} />
-            <Route path="/hr/employees" element={<Employees />} />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+    <I18nProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Page d'accueil */}
+              <Route path="/" element={<Index />} />
+              
+              {/* Pages d'authentification */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/company-setup" element={<CompanySetup />} />
+              
+              {/* Pages du tableau de bord */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              
+              {/* Pages CRM */}
+              <Route path="/crm/contacts" element={<Contacts />} />
+              
+              {/* Pages Inventaire */}
+              <Route path="/inventory/products" element={<Products />} />
+              
+              {/* Pages Ventes */}
+              <Route path="/sales/orders" element={<Orders />} />
+              
+              {/* Pages RH */}
+              <Route path="/hr/employees" element={<Employees />} />
+              
+              {/* Page 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </I18nProvider>
   </QueryClientProvider>
 );
 
