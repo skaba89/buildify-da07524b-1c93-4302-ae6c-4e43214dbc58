@@ -57,18 +57,38 @@ export const en = {
   description: "Description",
   
   // Orders
-  orderNumber: "Order Number",
-  customer: "Customer",
-  date: "Date",
-  total: "Total",
-  paymentStatus: "Payment Status",
-  fulfillmentStatus: "Fulfillment Status",
-  viewOrder: "View Order",
-  paid: "Paid",
-  unpaid: "Unpaid",
-  pending: "Pending",
-  fulfilled: "Fulfilled",
-  processing: "Processing",
+  orders: {
+    title: "Orders",
+    description: "Manage all your customer orders",
+    search: "Search orders...",
+    orderId: "Order ID",
+    customer: "Customer",
+    date: "Date",
+    status: "Status",
+    payment: "Payment",
+    total: "Total",
+    actions: "Actions",
+    export: "Export",
+    print: "Print",
+    refresh: "Refresh",
+    statusFilter: "Filter by status",
+    paymentFilter: "Filter by payment",
+    allStatuses: "All statuses",
+    allPayments: "All payments",
+    statusPending: "Pending",
+    statusProcessing: "Processing",
+    statusCompleted: "Completed",
+    statusCancelled: "Cancelled",
+    paymentPaid: "Paid",
+    paymentPending: "Pending",
+    paymentFailed: "Failed",
+    openMenu: "Open menu",
+    viewDetails: "View details",
+    editOrder: "Edit order",
+    updateStatus: "Update status",
+    cancelOrder: "Cancel order",
+    noOrdersFound: "No orders found"
+  },
   
   // Employees
   addEmployee: "Add Employee",
@@ -105,7 +125,7 @@ export const en = {
   // Not Found
   pageNotFound: "Page Not Found",
   pageNotFoundMessage: "The page you are looking for doesn't exist or has been moved.",
-  returnHome: "Return Home",
+  returnHome: "Return to Home",
   
   // Company Setup
   companySetup: "Company Setup",
@@ -121,7 +141,7 @@ export const en = {
   
   // Home page
   heroTitle: "Manage Your Business Efficiently",
-  heroSubtitle: "A comprehensive solution to manage your contacts, products, orders, and employees.",
+  heroSubtitle: "A complete solution to manage your contacts, products, orders, and employees.",
   getStarted: "Get Started",
   learnMore: "Learn More",
   featuresTitle: "Features",

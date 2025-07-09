@@ -6,7 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 // Type pour les traductions
 type Translations = {
-  [key: string]: string;
+  [key: string]: string | Record<string, string>;
 };
 
 // Type pour le contexte de traduction
@@ -32,7 +32,21 @@ export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ childre
   // Fonction pour obtenir une traduction
   const t = (key: string): string => {
     const currentTranslations = translations[language] || translations.fr;
-    return currentTranslations[key] || key;
+    
+    // Gestion des clés imbriquées (comme 'orders.title')
+    const keys = key.split('.');
+    let value: any = currentTranslations;
+    
+    for (const k of keys) {
+      if (value && value[k] !== undefined) {
+        value = value[k];
+      } else {
+        console.warn(`Translation key not found: ${key}`);
+        return key;
+      }
+    }
+    
+    return typeof value === 'string' ? value : key;
   };
 
   // Fonction pour changer de langue
