@@ -1,99 +1,79 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Company } from '@/types';
 
-interface AuthContextType {
-  user: User | null;
-  company: Company | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  setupCompany: (company: Omit<Company, 'id'>) => Promise<void>;
+// Types pour l'utilisateur
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
 }
 
+// Types pour le contexte d'authentification
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
+
+// Création du contexte
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Fournisseur du contexte d'authentification
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [company, setCompany] = useState<Company | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true);
+  
+  // Vérifier si l'utilisateur est déjà connecté au chargement
   useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté
     const storedUser = localStorage.getItem('user');
-    const storedCompany = localStorage.getItem('company');
-    
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-    
-    if (storedCompany) {
-      setCompany(JSON.parse(storedCompany));
-    }
-    
-    setIsLoading(false);
+    setLoading(false);
   }, []);
-
-  const login = async (email: string, password: string) => {
+  
+  // Fonction de connexion
+  const login = async (email: string, password: string): Promise<void> => {
     try {
-      setIsLoading(true);
-      
-      // Simulation d'une requête API
-      // Dans une vraie application, vous feriez une requête à votre API
+      setLoading(true);
+      // Simuler une requête API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Utilisateur fictif pour la démonstration
       const mockUser: User = {
         id: '1',
+        name: 'Jean Dupont',
         email,
-        name: 'Utilisateur Test',
         role: 'admin',
-        createdAt: new Date().toISOString(),
-      };
-      
-      const mockCompany: Company = {
-        id: '1',
-        name: 'Entreprise Test',
-        industry: 'Technologie',
-        employees: '10-50',
-        address: '123 Rue de Test',
-        city: 'Paris',
-        zipCode: '75000',
-        country: 'France',
-        phone: '+33123456789',
-        website: 'https://example.com',
-        createdAt: new Date().toISOString(),
       };
       
       setUser(mockUser);
-      setCompany(mockCompany);
-      
       localStorage.setItem('user', JSON.stringify(mockUser));
-      localStorage.setItem('company', JSON.stringify(mockCompany));
     } catch (error) {
       console.error('Erreur de connexion:', error);
       throw error;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
-
-  const register = async (email: string, password: string, name: string) => {
+  
+  // Fonction d'inscription
+  const register = async (name: string, email: string, password: string): Promise<void> => {
     try {
-      setIsLoading(true);
-      
-      // Simulation d'une requête API
+      setLoading(true);
+      // Simuler une requête API
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Utilisateur fictif pour la démonstration
       const mockUser: User = {
         id: '1',
-        email,
         name,
+        email,
         role: 'admin',
-        createdAt: new Date().toISOString(),
       };
       
       setUser(mockUser);
@@ -102,52 +82,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Erreur d\'inscription:', error);
       throw error;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
-
-  const setupCompany = async (companyData: Omit<Company, 'id'>) => {
-    try {
-      setIsLoading(true);
-      
-      // Simulation d'une requête API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Entreprise fictive pour la démonstration
-      const mockCompany: Company = {
-        id: '1',
-        ...companyData,
-        createdAt: new Date().toISOString(),
-      };
-      
-      setCompany(mockCompany);
-      localStorage.setItem('company', JSON.stringify(mockCompany));
-    } catch (error) {
-      console.error('Erreur de configuration de l\'entreprise:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = () => {
+  
+  // Fonction de déconnexion
+  const logout = (): void => {
     setUser(null);
-    setCompany(null);
     localStorage.removeItem('user');
-    localStorage.removeItem('company');
   };
-
+  
   return (
     <AuthContext.Provider
       value={{
         user,
-        company,
         isAuthenticated: !!user,
-        isLoading,
+        loading,
         login,
         register,
         logout,
-        setupCompany,
       }}
     >
       {children}
@@ -155,10 +108,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export const useAuth = () => {
+// Hook pour utiliser le contexte d'authentification
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
   }
   return context;
 };

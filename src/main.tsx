@@ -1,14 +1,23 @@
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { ThemeProvider } from './hooks/use-theme.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { TranslationProvider } from './i18n';
+import { AuthProvider } from './contexts/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="light">
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
-)
+    <BrowserRouter>
+      <LanguageProvider>
+        <TranslationProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </TranslationProvider>
+      </LanguageProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);

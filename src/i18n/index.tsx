@@ -1,67 +1,59 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { en } from './translations/en';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { fr } from './translations/fr';
+import { en } from './translations/en';
+import { useLanguage } from '../contexts/LanguageContext';
 
-type Translations = typeof en;
-
-interface I18nContextType {
-  t: (key: string) => string;
-  locale: string;
-  setLocale: (locale: string) => void;
-  availableLocales: string[];
-}
-
-const translations: Record<string, Translations> = {
-  en,
-  fr
+// Type pour les traductions
+type Translations = {
+  [key: string]: string;
 };
 
-const defaultLocale = 'fr'; // Français par défaut
-const availableLocales = Object.keys(translations);
+// Type pour le contexte de traduction
+type TranslationContextType = {
+  t: (key: string) => string;
+  changeLanguage: (lang: string) => void;
+  currentLanguage: string;
+};
 
-const I18nContext = createContext<I18nContextType | undefined>(undefined);
+// Créer le contexte
+const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
-export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [locale, setLocale] = useState(() => {
-    const savedLocale = localStorage.getItem('locale');
-    return savedLocale && availableLocales.includes(savedLocale) 
-      ? savedLocale 
-      : defaultLocale;
-  });
+// Fournisseur de traduction
+export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { language, setLanguage } = useLanguage();
 
-  useEffect(() => {
-    localStorage.setItem('locale', locale);
-    document.documentElement.lang = locale;
-  }, [locale]);
+  // Toutes les traductions disponibles
+  const translations: { [key: string]: Translations } = {
+    fr,
+    en,
+  };
 
+  // Fonction pour obtenir une traduction
   const t = (key: string): string => {
-    const keys = key.split('.');
-    let value: any = translations[locale];
+    const currentTranslations = translations[language] || translations.fr;
+    return currentTranslations[key] || key;
+  };
 
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k];
-      } else {
-        console.warn(`Translation key not found: ${key}`);
-        return key;
-      }
+  // Fonction pour changer de langue
+  const changeLanguage = (lang: string): void => {
+    if (translations[lang]) {
+      setLanguage(lang);
     }
-
-    return value as string;
   };
 
   return (
-    <I18nContext.Provider value={{ t, locale, setLocale, availableLocales }}>
+    <TranslationContext.Provider value={{ t, changeLanguage, currentLanguage: language }}>
       {children}
-    </I18nContext.Provider>
+    </TranslationContext.Provider>
   );
 };
 
-export const useTranslation = (): I18nContextType => {
-  const context = useContext(I18nContext);
+// Hook pour utiliser les traductions
+export const useTranslation = (): TranslationContextType => {
+  const context = useContext(TranslationContext);
   if (context === undefined) {
-    throw new Error('useTranslation must be used within an I18nProvider');
+    throw new Error('useTranslation doit être utilisé à l'intérieur d'un TranslationProvider');
   }
   return context;
 };
