@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { LanguageProvider } from './contexts/LanguageContext';
-import { TranslationProvider } from './i18n';
+import { TranslationProvider } from './i18n/index';
 import { AuthProvider } from './contexts/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
