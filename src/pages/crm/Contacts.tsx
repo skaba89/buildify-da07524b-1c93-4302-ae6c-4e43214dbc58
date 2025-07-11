@@ -1,10 +1,57 @@
 
 import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '../../components/layout/DashboardLayout';
-import { useTranslation } from '../../i18n';
-import { Contact, ContactStatus } from '../../types';
+import { useTranslation } from '../../i18n/index';
+import { Search } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { ContactStatus } from '../../types';
 
-export const Contacts: React.FC = () => {
+interface Contact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  mobile?: string;
+  company?: string;
+  jobTitle?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
+  notes?: string;
+  status: string;
+  companyId: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const Contacts: React.FC = () => {
   const { t } = useTranslation();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,28 +163,28 @@ export const Contacts: React.FC = () => {
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+        return 'bg-green-100 text-green-800';
       case 'INACTIVE':
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+        return 'bg-gray-100 text-gray-800';
       case 'LEAD':
-        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
+        return 'bg-yellow-100 text-yellow-800';
       case 'CUSTOMER':
-        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
+        return 'bg-blue-100 text-blue-800';
       default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return t('common.active');
+        return t('active');
       case 'INACTIVE':
-        return t('common.inactive');
+        return t('inactive');
       case 'LEAD':
-        return t('crm.leads');
+        return 'Lead';
       case 'CUSTOMER':
-        return t('dashboard.customers');
+        return t('customer');
       default:
         return status;
     }
@@ -145,36 +192,110 @@ export const Contacts: React.FC = () => {
 
   if (isLoading) {
     return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      </DashboardLayout>
+      <div className="p-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {t('crm.contacts')}
-          </h1>
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {t('crm.addContact')}
-          </button>
-        </div>
+    <div className="p-6">
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <CardTitle>{t('contacts')}</CardTitle>
+              <CardDescription>{t('addContact')}</CardDescription>
+            </div>
+            <Button>
+              {t('addContact')}
+            </Button>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                type="text"
+                placeholder={t('search')}
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder={t('status')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">{t('filter')}</SelectItem>
+                <SelectItem value="ACTIVE">{t('active')}</SelectItem>
+                <SelectItem value="INACTIVE">{t('inactive')}</SelectItem>
+                <SelectItem value="LEAD">Lead</SelectItem>
+                <SelectItem value="CUSTOMER">{t('customer')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardHeader>
         
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4">
-              <div className="w-full md:w-1/2">
-                <label htmlFor="search" className="sr-only">
-                  {t('common.search')}
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('name')}</TableHead>
+                <TableHead>{t('email')}</TableHead>
+                <TableHead>{t('phone')}</TableHead>
+                <TableHead>{t('company')}</TableHead>
+                <TableHead>{t('status')}</TableHead>
+                <TableHead className="text-right">{t('actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredContacts.length > 0 ? (
+                filteredContacts.map((contact) => (
+                  <TableRow key={contact.id}>
+                    <TableCell className="font-medium">
+                      {contact.firstName} {contact.lastName}
+                    </TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell>{contact.phone || '-'}</TableCell>
+                    <TableCell>{contact.company || '-'}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusBadgeClass(contact.status)}>
+                        {getStatusLabel(contact.status)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm">
+                        {t('view')}
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        {t('edit')}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-6 text-gray-500">
+                    {t('noData')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Contacts;
                 
