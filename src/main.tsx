@@ -5,18 +5,15 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { LanguageProvider } from './contexts/LanguageContext';
-import { TranslationProvider } from './i18n/index';
 import { AuthProvider } from './contexts/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <LanguageProvider>
-        <TranslationProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </TranslationProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </LanguageProvider>
     </BrowserRouter>
   </React.StrictMode>

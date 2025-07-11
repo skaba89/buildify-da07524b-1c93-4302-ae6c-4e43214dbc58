@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from '../../i18n/index';
+import { useLanguage as useTranslation } from '../../contexts/LanguageContext';
 
 // Icônes (utilisation de classes CSS pour simuler des icônes)
 const DashboardIcon = () => <span className="icon dashboard-icon">📊</span>;

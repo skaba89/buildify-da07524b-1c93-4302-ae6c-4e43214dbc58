@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useTranslation } from '../../i18n/index';
+import { useLanguage as useTranslation } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const TopBar: React.FC = () => {

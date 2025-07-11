@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from '../../i18n/index';
+import { useLanguage as useTranslation } from '../../contexts/LanguageContext';
 import { Search } from 'lucide-react';
 import {
   Card,
