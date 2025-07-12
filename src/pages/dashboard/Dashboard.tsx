@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useTranslation } from '../../i18n';
+import { useTranslation } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {

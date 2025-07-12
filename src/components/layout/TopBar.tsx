@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { useLanguage as useTranslation } from '../../contexts/LanguageContext';
+import { useTranslation } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const TopBar: React.FC = () => {
-  const { t, changeLanguage, currentLanguage } = useTranslation();
+  const { t, language, setLanguage } = useTranslation();
   const { user, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -13,7 +13,7 @@ const TopBar: React.FC = () => {
   };
 
   const handleLanguageChange = (lang: string) => {
-    changeLanguage(lang);
+    setLanguage(lang);
   };
 
   return (
@@ -25,13 +25,13 @@ const TopBar: React.FC = () => {
       <div className="topbar-right">
         <div className="language-selector">
           <button 
-            className={`lang-btn ${currentLanguage === 'fr' ? 'active' : ''}`} 
+            className={`lang-btn ${language === 'fr' ? 'active' : ''}`} 
             onClick={() => handleLanguageChange('fr')}
           >
             FR
           </button>
           <button 
-            className={`lang-btn ${currentLanguage === 'en' ? 'active' : ''}`} 
+            className={`lang-btn ${language === 'en' ? 'active' : ''}`} 
             onClick={() => handleLanguageChange('en')}
           >
             EN

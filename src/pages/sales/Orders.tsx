@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useLanguage as useTranslation } from '../../contexts/LanguageContext';
+import { useTranslation } from '../../contexts/LanguageContext';
 import {
   Card,
   CardContent,

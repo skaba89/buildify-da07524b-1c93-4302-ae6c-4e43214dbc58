@@ -69,8 +69,15 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return typeof value === 'string' ? value : key;
   };
 
+  const contextValue: LanguageContextType = {
+    language,
+    setLanguage,
+    t,
+    languages
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, languages }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
