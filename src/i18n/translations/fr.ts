@@ -161,5 +161,9 @@ export const fr = {
   copyright: "© 2025 MonEntreprise. Tous droits réservés.",
   termsOfService: "Conditions d'utilisation",
   privacyPolicy: "Politique de confidentialité",
-  contactUs: "Nous contacter"
+  contactUs: "Nous contacter",
+  
+  // Paramètres de test
+  welcome: "Bienvenue, {name}!",
+  items: "Vous avez {count} article(s) dans votre panier."
 };

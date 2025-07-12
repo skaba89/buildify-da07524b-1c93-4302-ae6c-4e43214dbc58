@@ -16,49 +16,176 @@ import './App.css';
 
 // Composant de test pour le système de traduction
 import { useTranslation } from './contexts/LanguageContext';
+import { useState } from 'react';
 
 const TestI18n: React.FC = () => {
   const { t, language, setLanguage, languages } = useTranslation();
+  const [name, setName] = useState('Jean');
+  const [count, setCount] = useState(5);
+
+  // Liste des clés de traduction à tester
+  const basicKeys = ['dashboard', 'contacts', 'products', 'orders', 'employees', 'settings'];
+  const nestedKeys = [
+    'orders.title', 
+    'orders.description', 
+    'orders.search',
+    'orders.statusPending',
+    'orders.paymentPaid'
+  ];
+
+  // Ajouter des traductions avec paramètres pour la démonstration
+  const withParams = {
+    fr: {
+      welcome: "Bienvenue, {name}!",
+      items: "Vous avez {count} article(s) dans votre panier."
+    },
+    en: {
+      welcome: "Welcome, {name}!",
+      items: "You have {count} item(s) in your cart."
+    }
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Test du système de traduction</h1>
-      <p>Langue actuelle : {language}</p>
-      <div>
-        {languages.map(lang => (
-          <button 
-            key={lang.code}
-            onClick={() => setLanguage(lang.code)}
-            style={{ 
-              margin: '5px', 
-              padding: '5px 10px',
-              backgroundColor: language === lang.code ? '#1a1a2e' : '#ffffff',
-              color: language === lang.code ? '#ffffff' : '#1a1a2e',
-              border: '1px solid #1a1a2e',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            {lang.name}
-          </button>
-        ))}
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto' }}>
+      <h1 style={{ color: '#1a1a2e' }}>Test du système de traduction</h1>
+      
+      <div style={{ 
+        padding: '15px', 
+        backgroundColor: '#f8f9fa', 
+        borderRadius: '8px',
+        marginBottom: '20px'
+      }}>
+        <h2 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>Configuration</h2>
+        <p><strong>Langue actuelle :</strong> {language}</p>
+        <div>
+          {languages.map(lang => (
+            <button 
+              key={lang.code}
+              onClick={() => setLanguage(lang.code)}
+              style={{ 
+                margin: '5px', 
+                padding: '8px 15px',
+                backgroundColor: language === lang.code ? '#1a1a2e' : '#ffffff',
+                color: language === lang.code ? '#ffffff' : '#1a1a2e',
+                border: '1px solid #1a1a2e',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              {lang.name}
+            </button>
+          ))}
+        </div>
       </div>
-      <div style={{ marginTop: '20px' }}>
-        <h2>Traductions de base</h2>
-        <ul>
-          <li>dashboard: {t('dashboard')}</li>
-          <li>contacts: {t('contacts')}</li>
-          <li>products: {t('products')}</li>
-          <li>orders: {t('orders')}</li>
-        </ul>
+      
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+        gap: '20px'
+      }}>
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#f8f9fa', 
+          borderRadius: '8px' 
+        }}>
+          <h2 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>Traductions de base</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Clé</th>
+                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Traduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              {basicKeys.map(key => (
+                <tr key={key}>
+                  <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}><code>{key}</code></td>
+                  <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{t(key)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#f8f9fa', 
+          borderRadius: '8px' 
+        }}>
+          <h2 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>Traductions imbriquées</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Clé</th>
+                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Traduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              {nestedKeys.map(key => (
+                <tr key={key}>
+                  <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}><code>{key}</code></td>
+                  <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{t(key)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div style={{ marginTop: '20px' }}>
-        <h2>Traductions imbriquées</h2>
-        <ul>
-          <li>orders.title: {t('orders.title')}</li>
-          <li>orders.description: {t('orders.description')}</li>
-          <li>orders.search: {t('orders.search')}</li>
-        </ul>
+      
+      <div style={{ 
+        padding: '15px', 
+        backgroundColor: '#f8f9fa', 
+        borderRadius: '8px',
+        marginTop: '20px' 
+      }}>
+        <h2 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>Traductions avec paramètres</h2>
+        <p>
+          <strong>Exemple 1:</strong> {withParams[language as keyof typeof withParams].welcome.replace('{name}', name)}
+          <br />
+          <em>Avec interpolation:</em> {t('welcome', { name })}
+        </p>
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ marginRight: '10px' }}>Nom:</label>
+          <input 
+            type="text" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)}
+            style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+        </div>
+        
+        <p>
+          <strong>Exemple 2:</strong> {withParams[language as keyof typeof withParams].items.replace('{count}', count.toString())}
+          <br />
+          <em>Avec interpolation:</em> {t('items', { count })}
+        </p>
+        <div>
+          <label style={{ marginRight: '10px' }}>Nombre:</label>
+          <input 
+            type="number" 
+            value={count} 
+            onChange={(e) => setCount(parseInt(e.target.value) || 0)}
+            style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+        </div>
+      </div>
+      
+      <div style={{ marginTop: '30px', textAlign: 'center' }}>
+        <a 
+          href="/" 
+          style={{ 
+            display: 'inline-block',
+            padding: '10px 20px',
+            backgroundColor: '#1a1a2e',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            fontWeight: 'bold'
+          }}
+        >
+          Retour à l'application
+        </a>
       </div>
     </div>
   );

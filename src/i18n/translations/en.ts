@@ -161,5 +161,9 @@ export const en = {
   copyright: "© 2025 MyCompany. All rights reserved.",
   termsOfService: "Terms of Service",
   privacyPolicy: "Privacy Policy",
-  contactUs: "Contact Us"
+  contactUs: "Contact Us",
+  
+  // Test parameters
+  welcome: "Welcome, {name}!",
+  items: "You have {count} item(s) in your cart."
 };

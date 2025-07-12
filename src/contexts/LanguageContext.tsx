@@ -1,11 +1,11 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { languages, getTranslation, getBrowserLanguage } from '../i18n';
+import { languages, getTranslation, getBrowserLanguage, interpolate } from '../i18n';
 
 export type LanguageContextType = {
   language: string;
   setLanguage: (lang: string) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
   languages: { code: string; name: string }[];
 };
 
@@ -31,9 +31,10 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   }, [language]);
 
-  // Fonction pour obtenir une traduction
-  const t = (key: string): string => {
-    return getTranslation(key, language);
+  // Fonction pour obtenir une traduction avec interpolation de paramètres
+  const t = (key: string, params?: Record<string, string | number>): string => {
+    const translation = getTranslation(key, language);
+    return params ? interpolate(translation, params) : translation;
   };
 
   const contextValue: LanguageContextType = {
