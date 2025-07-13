@@ -54,7 +54,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage doit être utilisé à l'intérieur d'un LanguageProvider');
+    throw new Error('useLanguage doit être utilisé à l\'intérieur d\'un LanguageProvider');
   }
   return context;
 };
