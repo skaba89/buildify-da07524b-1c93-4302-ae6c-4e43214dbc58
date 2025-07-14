@@ -33,18 +33,6 @@ const TestI18n: React.FC = () => {
     'orders.paymentPaid'
   ];
 
-  // Ajouter des traductions avec paramètres pour la démonstration
-  const withParams = {
-    fr: {
-      welcome: "Bienvenue, {name}!",
-      items: "Vous avez {count} article(s) dans votre panier."
-    },
-    en: {
-      welcome: "Welcome, {name}!",
-      items: "You have {count} item(s) in your cart."
-    }
-  };
-
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto' }}>
       <h1 style={{ color: '#1a1a2e' }}>Test du système de traduction</h1>
@@ -141,9 +129,7 @@ const TestI18n: React.FC = () => {
       }}>
         <h2 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>Traductions avec paramètres</h2>
         <p>
-          <strong>Exemple 1:</strong> {withParams[language as keyof typeof withParams].welcome.replace('{name}', name)}
-          <br />
-          <em>Avec interpolation:</em> {t('welcome', { name })}
+          <strong>Exemple 1:</strong> {t('welcome', { name })}
         </p>
         <div style={{ marginBottom: '10px' }}>
           <label style={{ marginRight: '10px' }}>Nom:</label>
@@ -156,9 +142,7 @@ const TestI18n: React.FC = () => {
         </div>
         
         <p>
-          <strong>Exemple 2:</strong> {withParams[language as keyof typeof withParams].items.replace('{count}', count.toString())}
-          <br />
-          <em>Avec interpolation:</em> {t('items', { count })}
+          <strong>Exemple 2:</strong> {t('items', { count })}
         </p>
         <div>
           <label style={{ marginRight: '10px' }}>Nombre:</label>
